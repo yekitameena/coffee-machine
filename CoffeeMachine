@@ -1,0 +1,200 @@
+package machine;
+import java.util.Scanner;
+
+import static machine.CoffeeMachine.CoffeeType.*;
+
+public class CoffeeMachine {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int waterCapacity = 400;
+        int milkCapacity = 540;
+        int coffeeBeansCapacity = 120;
+        int disposableCupCapacity = 9;
+        int moneyEarned = 550;
+        String actionToTake;
+
+        do {
+            System.out.println("\nWrite action (buy, fill, take, remaining, exit):");
+            actionToTake = scanner.next().toUpperCase();
+            DoAction coffeeAction = DoAction.valueOf(actionToTake);
+
+            boolean isEnoughWater = true;
+            boolean isEnoughMilk = true;
+            boolean isEnoughCoffeeBeans = true;
+            boolean isEnoughDisposableCup = true;
+            int x = 0;
+
+            switch (coffeeAction) {
+                case BUY:
+                    System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:");
+                    String input = scanner.next();
+                    int coffeeOrder;
+
+                    if (input.equals("back")) {
+                        continue;
+                    } else {
+                        coffeeOrder = Integer.parseInt(input);
+                    }
+
+                    CoffeeType coffeeOrderType = CoffeeType.valueOf("");;
+                    if(coffeeOrder == 1) {
+                        coffeeOrderType = CoffeeType.valueOf("ESPRESSO");
+                    } else if (coffeeOrder == 2) {
+                        coffeeOrderType = CoffeeType.valueOf("LATTE");
+                    } else if (coffeeOrder == 3) {
+                        coffeeOrderType = CoffeeType.valueOf("CAPPUCCINO");
+                    }
+
+                    switch (coffeeOrderType) {
+                        case ESPRESSO: //espresso
+                            if (waterCapacity <= 250) {
+                                isEnoughWater = false;
+                                x =1;
+                            }
+                            if (coffeeBeansCapacity <= 16) {
+                                isEnoughCoffeeBeans = false;
+                                x = 1;
+                            }
+
+                            if (x == 1) {
+                                break;
+                            }
+
+                            waterCapacity -= 250;
+                            coffeeBeansCapacity -= 16;
+                            moneyEarned += 4;
+                            break;
+                        case LATTE: //latte
+                            if (waterCapacity <= 350) {
+                                isEnoughWater = false;
+                                x = 1;
+                                break;
+                            }
+                            if (milkCapacity <= 75) {
+                                isEnoughWater = false;
+                                x = 1;
+                                break;
+                            }
+                            if (coffeeBeansCapacity <= 20) {
+                                isEnoughCoffeeBeans = false;
+                                x = 1;
+                                break;
+                            }
+
+                            if (x == 1) {
+                                break;
+                            }
+
+                            waterCapacity -= 350;
+                            milkCapacity -= 75;
+                            coffeeBeansCapacity -= 20;
+                            moneyEarned += 7;
+                            break;
+                        case CAPPUCCINO: //cappuccino
+                            if (waterCapacity <= 200) {
+                                isEnoughWater = false;
+                                x = 1;
+                                break;
+                            }
+                            if (milkCapacity <= 100) {
+                                isEnoughWater = false;
+                                x = 1;
+                                break;
+                            }
+                            if (coffeeBeansCapacity <= 12) {
+                                isEnoughCoffeeBeans = false;
+                                x = 1;
+                                break;
+                            }
+
+                            if (x == 1) {
+                                break;
+                            }
+                            waterCapacity -= 200;
+                            milkCapacity -= 100;
+                            coffeeBeansCapacity -= 12;
+                            moneyEarned += 6;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (disposableCupCapacity == 0) {
+                        isEnoughDisposableCup = false;
+                    }
+
+                    if (isEnoughWater && isEnoughMilk && isEnoughCoffeeBeans && isEnoughDisposableCup) {
+                        System.out.println("I have enough resources, making you a coffee!");
+                        --disposableCupCapacity;
+                    } else {
+                        if (!isEnoughWater) {
+                            System.out.println("Sorry, not enough water!");
+                        } else if (!isEnoughMilk) {
+                            System.out.println("Sorry, not enough milk!");
+                        } else if (!isEnoughCoffeeBeans) {
+                            System.out.println("Sorry, not enough cofee beans!");
+                        } else if (!isEnoughDisposableCup) {
+                            System.out.println("Sorry, not enough disposable cups!");
+                        }
+                    }
+
+                    break;
+                case FILL:
+                    System.out.println("\nWrite how many ml of water do you want to add:");
+                    waterCapacity += scanner.nextInt();
+
+                    System.out.println("Write how many ml of milk do you want to add:");
+                    milkCapacity += scanner.nextInt();
+
+                    System.out.println("Write how many grams of coffee beans do you want to add:");
+                    coffeeBeansCapacity += scanner.nextInt();
+
+                    System.out.println("Write how many disposable cups of coffee do you want to add:");
+                    disposableCupCapacity += scanner.nextInt();
+
+                    break;
+                case TAKE:
+                    System.out.printf("I gave you $%d \n", moneyEarned);
+                    moneyEarned = 0;
+                    break;
+                case REMAINING:
+                    System.out.println("\nThe coffee machine has:");
+                    System.out.printf("%d of water\n", waterCapacity);
+                    System.out.printf("%d of milk\n", milkCapacity);
+                    System.out.printf("%d of coffee beans\n", coffeeBeansCapacity);
+                    System.out.printf("%d of disposable cups\n", disposableCupCapacity);
+                    System.out.printf("$%d of money\n", moneyEarned);
+                    break;
+                case EXIT:
+                    break;
+                default:
+                    break;
+
+            }
+        } while (true);
+    }
+
+    public enum DoAction {
+        BUY,
+        FILL,
+        TAKE,
+        REMAINING,
+        EXIT;
+    }
+
+    public enum CoffeeType {
+        ESPRESSO(1),
+        LATTE(2),
+        CAPPUCCINO(3),
+        BACK(4);
+
+        int type;
+        CoffeeType(int type) {
+            this.type = type;
+        }
+
+        public int getType() {
+            return type;
+        }
+    }
+}
