@@ -36,7 +36,7 @@ public class CoffeeMachine {
                         coffeeOrder = Integer.parseInt(input);
                     }
 
-                    CoffeeType coffeeOrderType = CoffeeType.valueOf("");;
+                    CoffeeType coffeeOrderType = CoffeeType.valueOf("ESPRESSO");
                     if(coffeeOrder == 1) {
                         coffeeOrderType = CoffeeType.valueOf("ESPRESSO");
                     } else if (coffeeOrder == 2) {
@@ -44,6 +44,7 @@ public class CoffeeMachine {
                     } else if (coffeeOrder == 3) {
                         coffeeOrderType = CoffeeType.valueOf("CAPPUCCINO");
                     }
+                    System.out.println("coffeeOrderType:" + coffeeOrderType);
 
                     switch (coffeeOrderType) {
                         case ESPRESSO: //espresso
@@ -166,10 +167,9 @@ public class CoffeeMachine {
                     System.out.printf("$%d of money\n", moneyEarned);
                     break;
                 case EXIT:
-                    break;
+                    System.exit(0);
                 default:
                     break;
-
             }
         } while (true);
     }
@@ -197,4 +197,5 @@ public class CoffeeMachine {
             return type;
         }
     }
+
 }
